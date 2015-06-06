@@ -1,3 +1,4 @@
 *.pyc
 dist/*
 *.tgz
+.DS_Store
