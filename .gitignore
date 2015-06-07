@@ -2,3 +2,5 @@
 dist/*
 *.tgz
 .DS_Store
+build/*
+Xmlstats_py.egg-info/*

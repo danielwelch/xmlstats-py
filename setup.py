@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='Xmlstats-py',
-    version='0.0.1',
+    version='0.0.2',
     description='Python client for xmlstats API',
     url='https://github.com/dwelch2101/Xmlstats-py',
     author='Daniel Welch',

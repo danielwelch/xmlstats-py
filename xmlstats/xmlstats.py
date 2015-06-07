@@ -20,7 +20,7 @@ class Xmlstats:
         self.access_token = access_token
         self.user_agent = user_agent
 
-    def build_url(self, sport=None, method, date=None, id=None, format="json"):
+    def build_url(self, method, sport=None, date=None, id=None, format="json"):
         host = "https://erikberg.com/"
         path = "/".join(filter(None, (sport, method, date, id)))
         url = host + path + "." + format
