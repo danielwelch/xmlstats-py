@@ -1,6 +1,8 @@
 import requests
 import datetime
 
+__version__ = "0.11"
+
 
 class Struct:
     def __init__(self, data):
@@ -16,9 +18,24 @@ class Struct:
 
 class Xmlstats:
 
-    def __init__(self, access_token, user_agent):
+    def __init__(self, access_token, user_agent, objectify=True):
         self.access_token = access_token
         self.user_agent = user_agent
+        self.objectify = objectify
+
+    def objectify_off(self):
+        self.objectify = False
+        return
+
+    def objectify_on(self):
+        self.objectify = True
+        return
+
+    def format_result(data, objectify):
+        if objectify:
+            return Struct(data)
+        else:
+            return data
 
     def build_url(self, method, sport=None, date=None, id=None, format="json"):
         host = "https://erikberg.com/"
@@ -27,8 +44,10 @@ class Xmlstats:
         return url
 
     def http_get(self, url, params=None):
-        headers = {"Authorization": "Bearer " + self.access_token,
-                   "User-Agent": "xmlstats-py/0.1" + self.user_agent}
+        headers = {
+            "Authorization": "Bearer " + self.access_token,
+            "User-Agent": "xmlstats-py/" + __version__ + self.user_agent
+        }
         r = requests.get(url, headers=headers, params=params)
         if r.status_code == requests.codes.ok:
             return r.json()
@@ -38,7 +57,8 @@ class Xmlstats:
             delta = xmlstats_reset - now
             print(
                 '''Requests limit reached.
-                Waiting {} seconds to make new request'''.format(delta))
+                Waiting {} seconds to make new request'''.format(delta)
+            )
             return self.http_get(self, url)
         else:
             r.raise_for_status()
@@ -47,19 +67,17 @@ class Xmlstats:
         data = self.http_get(
             self.build_url(sport=sport, method="boxscore", id=event_id),
             params=None
-            )
-        boxscore = Struct(data)
-        return boxscore
+        )
+        return self.format_result(data, self.objectify)
 
     def get_nba_team_stats(self, date, team_id=None):
         data = self.http_get(
             self.buildurl(sport="nba", method="team-stats", date=date),
             params={
                 "team_id": team_id,
-                }
-            )
-        team_stats = Struct(data)
-        return team_stats
+            }
+        )
+        return self.format_result(data, self.objectify)
 
     def get_events(self, date, sport):
         data = self.http_get(
@@ -67,23 +85,23 @@ class Xmlstats:
             params={
                 "date": date,
                 "sport": sport,
-                }
-            )
-        events = Struct(data)
-        return events
+            }
+        )
+        return self.format_result(data, self.objectify)
 
     def get_roster(self, sport, team_id, status=None):
         '''arg stats="expanded" will return 40-man roster for MLB team,
         rather than 25-man roster
         '''
+        if sport is not "mlb":
+            status = None
         data = self.http_get(
             self.build_url(sport=sport, method="roster", id=team_id),
             params={
                 "status": status
-                }
-            )
-        roster = Struct(data)
-        return roster
+            }
+        )
+        return self.format_result(data, self.objectify)
 
     def get_nba_draft_results(self, season=None, team_id=None):
         data = self.http_get(
@@ -91,10 +109,9 @@ class Xmlstats:
             params={
                 "season": season,
                 "team_id": team_id
-                }
-            )
-        draft_results = Struct(data)
-        return draft_results
+            }
+        )
+        return self.format_result(data, self.objectify)
 
     def get_nba_leaders(self, category, limit=None,
                         qualified=None, season_type=None):
@@ -109,17 +126,15 @@ class Xmlstats:
                 "limit": limit,
                 "qualified": qualified,
                 "season_type": season_type,
-                }
-            )
-        leaders = Struct(data)
-        return leaders
+            }
+        )
+        return self.format_result(data, self.objectify)
 
     def get_teams(self, sport):
         data = self.http_get(
             self.build_url(sport=sport, method="teams"),
-            )
-        teams = Struct(data)
-        return teams
+        )
+        return self.format_result(data, self.objectify)
 
     def get_team_results(self, sport, team_id, season=None, since=None,
                          until=None, order=None):
@@ -130,21 +145,18 @@ class Xmlstats:
                 "since": since,
                 "until": until,
                 "order": order,
-                }
-            )
-        results = Struct(data)
-        return results
+            }
+        )
+        return self.format_result(data, self.objectify)
 
     def get_standings(self, sport, date=None):
         data = self.http_get(
             self.build_url(sport=sport, method="standings", date=date)
-            )
-        standings = Struct(data)
-        return standings
+        )
+        return self.format_result(data, self.objectify)
 
     def get_wildcard_standings(self, date):
         data = self.http_get(
             self.build_url(sport="mlb", method="wildcard", date=date)
-            )
-        wildcard = Struct(data)
-        return wildcard
+        )
+        return self.format_result(data, self.objectify)
