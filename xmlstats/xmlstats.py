@@ -1,7 +1,7 @@
 import requests
 import datetime
 
-__version__ = "0.11"
+__version__ = "0.1.1"
 
 
 class Struct:
