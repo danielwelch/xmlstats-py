@@ -1,5 +1,5 @@
 #xmlstats-py
-A module for interacting with the xmlstats API -- https://erikberg.com/api
+A python module for interacting with the [xmlstats API](https://erikberg.com/api)
 
 This module aims to closely mirror the methods provided by the xmlstats API in terms of parameters and output structure.
 
