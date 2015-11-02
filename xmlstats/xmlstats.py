@@ -1,5 +1,7 @@
+from datetime import datetime
 import requests
-import datetime
+import time
+
 
 __version__ = "0.1.1"
 
@@ -46,20 +48,21 @@ class Xmlstats:
     def http_get(self, url, params=None):
         headers = {
             "Authorization": "Bearer " + self.access_token,
-            "User-Agent": "xmlstats-py/" + __version__ + self.user_agent
+            "User-Agent": "xmlstats-py/" + __version__ + " " + self.user_agent
         }
         r = requests.get(url, headers=headers, params=params)
         if r.status_code == requests.codes.ok:
             return r.json()
         elif r.status_code == 429:
-            xmlstats_reset = r.headers["xmlstats-api-reset"]
+            xmlstats_reset = int(r.headers["xmlstats-api-reset"])
             now = int(datetime.now().strftime('%s'))
             delta = xmlstats_reset - now
             print(
                 '''Requests limit reached.
                 Waiting {} seconds to make new request'''.format(delta)
             )
-            return self.http_get(self, url)
+            time.sleep(delta)
+            return self.http_get(url)
         else:
             r.raise_for_status()
 
