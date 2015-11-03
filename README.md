@@ -8,6 +8,7 @@ This module aims to closely mirror the methods provided by the xmlstats API in t
 
 ##Installing
 ```pip install xmlstats-py```
+Compatible with Python 2.7, 3.2+
 
 ##Usage
 Xmlstats can return "objectified" data, in which nested JSON objects from the xmlstats API are accessible as attributes, or it can return data in native python objects, as if parsed with ```json.load()```.

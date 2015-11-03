@@ -62,7 +62,7 @@ class Xmlstats:
                 Waiting {} seconds to make new request'''.format(delta)
             )
             time.sleep(delta)
-            return self.http_get(url)
+            return self.http_get(url, params)
         else:
             r.raise_for_status()
 
