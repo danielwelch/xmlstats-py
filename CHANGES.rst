@@ -1,6 +1,14 @@
 Changelog
 =========
 
+0.1.5 (2015-11-03)
+------------------
+
+Fixes:
+
+- Fixed http_get bug that prevented including paramaters in the next request after a 429 response code from xlmstats server.
+
+
 0.1.4 (2015-11-02)
 ------------------
 
