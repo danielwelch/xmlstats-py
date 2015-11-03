@@ -14,7 +14,7 @@ Testing:
 
 Documentation:
 
-- Added Travis CI embedded status image to README
+- Added Travis CI embedded status image to READMEg
 
 
 0.1.3 (2015-11-02)

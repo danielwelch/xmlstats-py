@@ -1,5 +1,6 @@
 #xmlstats-py
 [![Build Status](https://travis-ci.org/dwelch2101/xmlstats-py.svg?branch=master)](https://travis-ci.org/dwelch2101/xmlstats-py)
+
 A python module for interacting with the [xmlstats API](https://erikberg.com/api)
 
 This module aims to closely mirror the methods provided by the xmlstats API in terms of parameters and output structure.
