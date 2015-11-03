@@ -8,7 +8,7 @@ __version__ = "0.1.3"
 
 class Struct:
     def __init__(self, data):
-        for name, value in data.iteritems():
+        for name, value in data.items():
             setattr(self, name, self._wrap(value))
 
     def _wrap(self, value):
@@ -33,7 +33,7 @@ class Xmlstats:
         self.objectify = True
         return
 
-    def format_result(data, objectify):
+    def format_result(self, data, objectify):
         if objectify:
             return Struct(data)
         else:

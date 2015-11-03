@@ -28,13 +28,8 @@ class TestXmlStats(unittest.TestCase):
 
     def test_http_get(self):
         url = "https://erikberg.com/nba/boxscore/20120621-oklahoma-city-thunder-at-miami-heat.json"
-        result = self.s.http_get(url)
-        print(result)
-        self.assertEqual(
-            self.boxscore["home_period_scores"],
-            result["home_period_scores"]
-        )
-        self.assertEqual(self.boxscore.keys(), result.keys())
+        result = self.s_native.http_get(url)
+        self.assertEqual(self.boxscore, result)
 
     def test_http_get_timeout(self):
         urls = [
@@ -70,3 +65,13 @@ class TestXmlStats(unittest.TestCase):
         for url, team_id in urls:
             result = self.s.http_get(url)
             self.assertEqual(result["away_team"]["team_id"], team_id)
+
+    def test_get_boxscore(self):
+        event_id = "20120621-oklahoma-city-thunder-at-miami-heat"
+        box = self.s.get_boxscore("nba", event_id)
+        self.assertEqual(box.away_team.full_name, "Oklahoma City Thunder")
+
+    def test_get_events(self):
+        date = "20130131"
+        events = self.s.get_events(date, "nba")
+        self.assertEqual(events.events_date, "2013-01-31T00:00:00-05:00")
