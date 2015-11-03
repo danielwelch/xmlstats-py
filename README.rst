@@ -12,7 +12,9 @@ API in terms of parameters and output structure.
 Installing
 ----------
 
-``pip install xmlstats-py`` Compatible with Python 2.7, 3.2+
+``pip install xmlstats-py``
+
+Compatible with Python 2.7, 3.2+
 
 Usage
 -----
@@ -34,7 +36,11 @@ Methods
 
 See the `API documentation <https://erikberg.com/api/methods>`__ for a
 complete explanation of parameters and results.
-#####get\_boxscore(sport, event\_id) sport = "nba" or "mlb"
+
+get\_boxscore(sport, event\_id)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+sport = "nba" or "mlb"
 
 get\_events(date, sport)
 ^^^^^^^^^^^^^^^^^^^^^^^^

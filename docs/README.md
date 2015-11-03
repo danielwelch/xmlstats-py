@@ -8,6 +8,7 @@ This module aims to closely mirror the methods provided by the xmlstats API in t
 
 ##Installing
 ```pip install xmlstats-py```
+
 Compatible with Python 2.7, 3.2+
 
 ##Usage
@@ -22,6 +23,7 @@ stats.objectify_on()  # set objectify = True
 ```
 ####Methods
 See the [API documentation](https://erikberg.com/api/methods) for a complete explanation of parameters and results.
+
 #####get_boxscore(sport, event_id)
 sport = "nba" or "mlb"
 
