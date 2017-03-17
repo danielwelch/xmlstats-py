@@ -1,6 +1,13 @@
 Changelog
 =========
 
+1.0.0 (2017-03-17)
+------------------
+
+- Complete overhaul of the way data is returned and represented when using this library. Data is now returned as NamedTuples, rather than as either simple dictionaries/lists or "objectified" data as in previous versions.
+- Methods were reimplimented to match the endpoints of the xmlstats API. Each method exposed by the XmlStats class corresponds to a single endpoint provided by the API, and accepts the same arguments and parameters. This means users of this library can essentially refer to the already existing xmlstats API documentation.
+
+
 0.1.5 (2015-11-03)
 ------------------
 

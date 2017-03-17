@@ -14,70 +14,58 @@ Installing
 
 ``pip install xmlstats-py``
 
-Compatible with Python 2.7, 3.2+
+Tested against Python 2.7, 3.2-3.6
 
 Usage
 -----
 
-Xmlstats can return "objectified" data, in which nested JSON objects
-from the xmlstats API are accessible as attributes, or it can return
-data in native python objects, as if parsed with ``json.load()``.
+Instantiate an XmlStats object using a valid access token and user
+agent, obtained from the `xmlstats API <https://erikberg.com/api>`__.
 
 .. code:: python
 
-    stats = Xmlstats(access_token=MY_ACCESS_TOKEN, user_agent=MY_USER_AGENT, objectify=True)
-    # if objectify=False, data will be returned in native python objects
+    stats = Xmlstats(access_token=MY_ACCESS_TOKEN, user_agent=MY_USER_AGENT)
 
-    stats.objectify_off() # set objectify = False
-    stats.objectify_on()  # set objectify = True
+This object exposes a number of methods (one for each API endpoint) that
+return a NamedTuple representation of the data provided by the API. The
+JSON response is processed with ``json.loads``, and a custom
+``object_hook`` is used to convert JSON objects into NamedTuples when
+they are encountered. This means fields can be accessed using dot
+notation.
 
 Methods
 ^^^^^^^
 
-See the `API documentation <https://erikberg.com/api/methods>`__ for a
-complete explanation of parameters and results.
+Each method exposed by the Xmlstats class aims to mirror an the endpoint
+provided by the API. See the `API
+documentation <https://erikberg.com/api/methods>`__ for a complete
+explanation of parameters and results.
 
-get\_boxscore(sport, event\_id)
-'''''''''''''''''''''''''''''''
-
-sport = "nba" or "mlb"
-
-get\_events(date, sport)
-''''''''''''''''''''''''
-
-Date must be in YYYYmmdd format
-
-get\_teams(sport)
-'''''''''''''''''
-
-get\_roster(sport, team\_id, status=None)
-'''''''''''''''''''''''''''''''''''''''''
-
-status = "expanded" will return the 40-man roster for an MLB team,
-rather than 25-man roster
-
-get\_nba\_team\_stats(date, team\_id=None)
-''''''''''''''''''''''''''''''''''''''''''
-
-get\_team\_results(team\_id, season=None, since=None, until=None, order=None)
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-
-get\_nba\_draft\_results(season=None, team\_id=None)
-''''''''''''''''''''''''''''''''''''''''''''''''''''
-
-get\_nba\_leaders(category, limit=None,qualified=None, season\_type=None)
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-
-For list of category IDs, see
-`here <https://erikberg.com/api/methods/nba-leaders>`__. Qualified
-parameter (default=True) determines whether players who meet NBA's
-minimum qualifications will be returned, or all players.
-
-get\_standings(sport, date=None)
-''''''''''''''''''''''''''''''''
-
-get\_wildcard\_standings(date)
-''''''''''''''''''''''''''''''
++--------------------------------------------------------------------------------------------+------------------------------+
+| API Endpoint                                                                               | Class Method                 |
++============================================================================================+==============================+
+| `Events <https://erikberg.com/api/endpoints/events>`__                                     | events                       |
++--------------------------------------------------------------------------------------------+------------------------------+
+| `Roster <https://erikberg.com/api/endpoints/roster>`__                                     | roster                       |
++--------------------------------------------------------------------------------------------+------------------------------+
+| `Standings <https://erikberg.com/api/endpoints/standings>`__                               | standings                    |
++--------------------------------------------------------------------------------------------+------------------------------+
+| `Teams <https://erikberg.com/api/endpoints/teams>`__                                       | teams                        |
++--------------------------------------------------------------------------------------------+------------------------------+
+| `Team Schedule/Results <https://erikberg.com/api/endpoints/team-results>`__                | team\_results                |
++--------------------------------------------------------------------------------------------+------------------------------+
+| `NBA Box Score <https://erikberg.com/api/endpoints/nba-box-score>`__                       | nba\_box\_score              |
++--------------------------------------------------------------------------------------------+------------------------------+
+| `NBA Draft <https://erikberg.com/api/endpoints/nba-draft>`__                               | nba\_draft                   |
++--------------------------------------------------------------------------------------------+------------------------------+
+| `NBA Daily Leaders <https://erikberg.com/api/endpoints/nba-daily-leaders>`__               | nba\_daily\_leaders          |
++--------------------------------------------------------------------------------------------+------------------------------+
+| `NBA Team Stats <https://erikberg.com/api/endpoints/nba-team-stats>`__                     | nba\_team\_stats             |
++--------------------------------------------------------------------------------------------+------------------------------+
+| `MLB Box Score <https://erikberg.com/api/endpoints/mlb-box-score>`__                       | mlb\_box\_score              |
++--------------------------------------------------------------------------------------------+------------------------------+
+| `MLB Wild Card Standings <https://erikberg.com/api/endpoints/mlb-wild-card-standings>`__   | mlb\_wild\_card\_standings   |
++--------------------------------------------------------------------------------------------+------------------------------+
 
 Examples
 --------
@@ -88,15 +76,11 @@ Get Boxscores for a given date - *yyyymmdd*
 .. code:: python
 
     stats = Xmlstats(access_token=MY_ACCESS_TOKEN, user_agent=MY_USER_AGENT)
-    events = stats.get_events(date=20141028, sport="nba")  # returns event objects for all nba events on given date
+    events = stats.events(date="20141028", sport="nba")  # returns NamedTuple "Events" which mirrors data structure explained in API documentation, containing all NBA events on given date
     event_ids = [event.event_id for event in events.event]
-    boxscores = []
-    for event_id in event_ids:
-        boxscores.append(stats.get_boxscore(sport="nba", event_id))
-
-Note: As in the xmlstats API, the ``get_events()`` method returns an
-instance with 2 attributes: ``events_date`` is a date string; ``event``
-is an array of event objects
+    boxscores = [
+            stats.nba_box_score(eid) for eid in event_ids
+    ]
 
 .. |Build Status| image:: https://travis-ci.org/danielwelch/xmlstats-py.svg?branch=master
    :target: https://travis-ci.org/danielwelch/xmlstats-py

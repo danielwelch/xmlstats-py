@@ -9,45 +9,32 @@ This module aims to closely mirror the methods provided by the xmlstats API in t
 ##Installing
 ```pip install xmlstats-py```
 
-Compatible with Python 2.7, 3.2+
+Tested against Python 2.7, 3.2-3.6
 
 ##Usage
-Xmlstats can return "objectified" data, in which nested JSON objects from the xmlstats API are accessible as attributes, or it can return data in native python objects, as if parsed with ```json.load()```.
+Instantiate an XmlStats object using a valid access token and user agent, obtained from the [xmlstats API](https://erikberg.com/api).
 
 ```python
-stats = Xmlstats(access_token=MY_ACCESS_TOKEN, user_agent=MY_USER_AGENT, objectify=True)
-# if objectify=False, data will be returned in native python objects
-
-stats.objectify_off() # set objectify = False
-stats.objectify_on()  # set objectify = True
+stats = Xmlstats(access_token=MY_ACCESS_TOKEN, user_agent=MY_USER_AGENT)
 ```
+This object exposes a number of methods (one for each API endpoint) that return a NamedTuple representation of the data provided by the API. The JSON response is processed with ```json.loads```, and a custom ```object_hook``` is used to convert JSON objects into NamedTuples when they are encountered. This means fields can be accessed using dot notation.
+
 ####Methods
-See the [API documentation](https://erikberg.com/api/methods) for a complete explanation of parameters and results.
+Each method exposed by the Xmlstats class aims to mirror an the endpoint provided by the API. See the [API documentation](https://erikberg.com/api/methods) for a complete explanation of parameters and results.
 
-#####get_boxscore(sport, event_id)
-sport = "nba" or "mlb"
-
-#####get_events(date, sport)
-Date must be in YYYYmmdd format
-
-#####get_teams(sport)
-
-#####get_roster(sport, team_id, status=None)
-status = "expanded" will return the 40-man roster for an MLB team, rather than 25-man roster
-
-#####get_nba_team_stats(date, team_id=None)
-
-#####get_team_results(team_id, season=None, since=None, until=None, order=None)
-
-#####get_nba_draft_results(season=None, team_id=None)
-
-#####get_nba_leaders(category, limit=None,qualified=None, season_type=None)
-For list of category IDs, see [here](https://erikberg.com/api/methods/nba-leaders). Qualified parameter (default=True) determines whether players who meet NBA's minimum qualifications will be returned, or all players.
-
-#####get_standings(sport, date=None)
-
-#####get_wildcard_standings(date)
-
+|API Endpoint|Class Method|
+|------------|------------|
+|[Events](https://erikberg.com/api/endpoints/events)|events|
+|[Roster](https://erikberg.com/api/endpoints/roster)|roster|
+|[Standings](https://erikberg.com/api/endpoints/standings)|standings|
+|[Teams](https://erikberg.com/api/endpoints/teams)|teams|
+|[Team Schedule/Results](https://erikberg.com/api/endpoints/team-results)|team_results|
+|[NBA Box Score](https://erikberg.com/api/endpoints/nba-box-score)|nba_box_score|
+|[NBA Draft](https://erikberg.com/api/endpoints/nba-draft)|nba_draft|
+|[NBA Daily Leaders](https://erikberg.com/api/endpoints/nba-daily-leaders)|nba_daily_leaders|
+|[NBA Team Stats](https://erikberg.com/api/endpoints/nba-team-stats)|nba_team_stats|
+|[MLB Box Score](https://erikberg.com/api/endpoints/mlb-box-score)|mlb_box_score|
+|[MLB Wild Card Standings](https://erikberg.com/api/endpoints/mlb-wild-card-standings)|mlb_wild_card_standings|
 
 ##Examples
 
@@ -55,10 +42,9 @@ For list of category IDs, see [here](https://erikberg.com/api/methods/nba-leader
 
 ```python
 stats = Xmlstats(access_token=MY_ACCESS_TOKEN, user_agent=MY_USER_AGENT)
-events = stats.get_events(date=20141028, sport="nba")  # returns event objects for all nba events on given date
+events = stats.events(date="20141028", sport="nba")  # returns NamedTuple "Events" which mirrors data structure explained in API documentation, containing all NBA events on given date
 event_ids = [event.event_id for event in events.event]
-boxscores = []
-for event_id in event_ids:
-    boxscores.append(stats.get_boxscore(sport="nba", event_id))
+boxscores = [
+        stats.nba_box_score(eid) for eid in event_ids
+]
 ```
-Note: As in the xmlstats API, the `get_events()` method returns an instance with 2 attributes: `events_date` is a date string; `event` is an array of event objects

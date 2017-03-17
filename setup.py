@@ -10,7 +10,7 @@ long_description = u'\n\n'.join([read('README.rst'),
 
 setup(
     name='Xmlstats-py',
-    version='0.1.5',
+    version='1.0.0',
     description='Python client for xmlstats API',
     url='https://github.com/dwelch2101/Xmlstats-py',
     author='Daniel Welch',
