@@ -66,6 +66,8 @@ class Xmlstats:
             xmlstats_reset = int(r.headers["xmlstats-api-reset"])
             now = int(datetime.now().strftime('%s'))
             delta = xmlstats_reset - now
+            if delta < 0:  # the API seems to sometimes return -1 sec
+                return self._http_get(url, params)
             print(
                 '''Requests limit reached.
                 Waiting {} seconds to make new request'''.format(delta)
