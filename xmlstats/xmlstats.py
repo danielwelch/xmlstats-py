@@ -22,18 +22,9 @@ __version__ = "1.0.0"
 
 class Xmlstats:
 
-    def __init__(self, access_token, user_agent, objectify=True):
+    def __init__(self, access_token, user_agent):
         self.access_token = access_token
         self.user_agent = user_agent
-        # self.objectify = objectify
-
-    # def objectify_off(self):
-        # self.objectify = False
-        # return
-
-    # def objectify_on(self):
-        # self.objectify = True
-        # return
 
     def _format_result(self, name, data_str):
         # http://stackoverflow.com/a/15882054/7164290
@@ -41,12 +32,6 @@ class Xmlstats:
                 data_str,
                 object_hook=lambda d: namedtuple(name, d.keys())(*d.values())
         )
-
-    # def format_result(self, data, objectify):
-    #     if objectify:
-    #         return Struct(data)
-    #     else:
-    #         return data
 
     def _build_url(self, method, sport=None, date=None, id=None, format="json"):
         host = "https://erikberg.com/"

@@ -91,6 +91,11 @@ class TestXmlStats(unittest.TestCase):
         result = self.s.team_results(sport="nba", team_id="atlanta-hawks")
         self.assertEqual(result[0].team.team_id, "atlanta-hawks")
 
+    def test_blog_example(self):
+        data = self.s.nba_box_score(event_id="20120621-oklahoma-city-thunder-at-miami-heat")
+        durant_points = [player.points for player in data.away_stats if player.last_name == 'Durant'][0]
+        self.assertEqual(durant_points, 32)
+
     # def test_get_boxscore(self):
     #     event_id = "20120621-oklahoma-city-thunder-at-miami-heat"
     #     box = self.s.get_boxscore("nba", event_id)
