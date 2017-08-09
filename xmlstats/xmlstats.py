@@ -33,7 +33,8 @@ class Xmlstats:
                 object_hook=lambda d: namedtuple(name, d.keys())(*d.values())
         )
 
-    def _build_url(self, method, sport=None, date=None, id=None, format="json"):
+    def _build_url(self, method, sport=None,
+                   date=None, id=None, format="json"):
         host = "https://erikberg.com/"
         path = "/".join(filter(None, (sport, method, date, id)))
         url = host + path + "." + format
@@ -99,15 +100,15 @@ class Xmlstats:
         data = self._http_get(
                 self._build_url(method="results", sport=sport, id=team_id),
                 params={
-                    season: season,
-                    opponent: opponent,
-                    location_type: location_type,
-                    event_status: event_status,
-                    since: since,
-                    until: until,
-                    last: last,
-                    next: next,
-                    order: order
+                    "season": season,
+                    "opponent": opponent,
+                    "location_type": location_type,
+                    "event_status": event_status,
+                    "since": since,
+                    "until": until,
+                    "last": last,
+                    "next": next,
+                    "order": order
                 }
         )
         return self._format_result("TeamResults", data)
@@ -126,8 +127,8 @@ class Xmlstats:
         data = self._http_get(
                 self._build_url(sport="nba", method="draft"),
                 params={
-                    season: season,
-                    team_id: team_id
+                    "season": season,
+                    "team_id": team_id
                 }
         )
         return self._format_result("NBADraft", data)
@@ -137,9 +138,11 @@ class Xmlstats:
 
     def nba_daily_leaders(self, date=None, sort=None):
         data = self._http_get(
-                self._build_url(sport="nba", method="daily-leaders", date=date),
+                self._build_url(
+                    sport="nba", method="daily-leaders", date=date
+                ),
                 params={
-                    sort: sort
+                    "sort": sort
                 }
         )
         return self._format_result("NBADailyLeaders", data)
@@ -148,8 +151,8 @@ class Xmlstats:
         data = self._http_get(
                 self._build_url(sport="nba", method="team-stats", date=date),
                 params={
-                    season_type: season_type,
-                    team_id: team_id
+                    "season_type": season_type,
+                    "team_id": team_id
                 }
         )
         return self._format_result("NBATeamStats", data)

@@ -88,7 +88,7 @@ class TestXmlStats(unittest.TestCase):
         self.assertEqual(result[0].team_id, "atlanta-hawks")
 
     def test_team_results(self):
-        result = self.s.team_results(sport="nba", team_id="atlanta-hawks")
+        result = self.s.team_results(sport="nba", team_id="atlanta-hawks", event_status="completed", season="2016")
         self.assertEqual(result[0].team.team_id, "atlanta-hawks")
 
     def test_blog_example(self):
